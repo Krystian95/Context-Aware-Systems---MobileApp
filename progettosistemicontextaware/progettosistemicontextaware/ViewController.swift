@@ -13,7 +13,9 @@ import CoreMotion
 class ViewController: UIViewController, CLLocationManagerDelegate {
     
     var locationManager:CLLocationManager!
-
+    private let manager = CMMotionManager()
+    private let activityManager = CMMotionActivityManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -28,70 +30,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         super.viewWillAppear(animated)
         
         determineMyCurrentLocation()
-        
-        /*
-        let motionActivityManager = CMMotionActivityManager()
-        
-        //motionActivityManager.isActivityAvailable()
-
-        motionActivityManager.startActivityUpdates(to: OperationQueue.main) { (activity) in
-            print("Prova")
-            if (activity?.automotive)! {
-                print("User using car")
-            }
-            if (activity?.cycling)! {
-                print("User is cycling")
-            }
-            if (activity?.running)! {
-                print("User is running")
-            }
-            if (activity?.walking)! {
-                print("User is walking")
-            }
-            if (activity?.stationary)! {
-                print("User is standing")
-            }
-            if (activity?.unknown)! {
-                print("Unknown activity")
-            }
-        }
-        */
+        startMotionDetection()
     }
     
     func determineMyCurrentLocation() {
-        
-        /*
-        print("Prova 1")
-        
-        let manager = CMMotionActivityManager()
-        manager.startActivityUpdates(to: .main) { (activity) in
-            
-            print("Prova 2")
-            
-            guard let activity = activity else {
-                return
-            }
-
-            var modes: Set<String> = []
-            if activity.walking {
-                modes.insert("🚶‍")
-            }
-
-            if activity.running {
-                modes.insert("🏃‍")
-            }
-
-            if activity.cycling {
-                modes.insert("🚴‍")
-            }
-
-            if activity.automotive {
-                modes.insert("🚗")
-            }
-
-            print(modes.joined(separator: ", "))
-        }
-        */
         
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -120,5 +62,31 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
         print("Error \(error)")
+    }
+    
+    func startMotionDetection() {
+        DispatchQueue.global().async {
+            self.activityManager.startActivityUpdates(to: OperationQueue()) { [weak self] motionActivity in
+                guard self != nil else { return }
+                
+                guard let motionActivity = motionActivity else {
+                    return
+                }
+                
+                if motionActivity.stationary {
+                    print("L'utente è fermo")
+                } else if motionActivity.walking {
+                    print("L'utente cammina")
+                } else if motionActivity.running {
+                    print("L'utente corre")
+                } else if motionActivity.automotive {
+                    print("L'utente è in auto")
+                } else if motionActivity.cycling {
+                    print("L'utente è in bicicletta")
+                } else {
+                    print("Movimento sconosciuto")
+                }
+            }
+        }
     }
 }

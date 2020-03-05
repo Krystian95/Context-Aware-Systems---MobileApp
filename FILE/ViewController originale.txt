@@ -1,0 +1,145 @@
+//
+//  ViewController.swift
+//  progettosistemicontextaware
+//
+//  Created by Lorenzo Lanzarone on 04/03/2020.
+//  Copyright © 2020 Università di Bologna. All rights reserved.
+//
+
+import UIKit
+import CoreLocation
+import CoreMotion
+
+class ViewController: UIViewController, CLLocationManagerDelegate {
+    
+    var locationManager:CLLocationManager!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        
+        print("Prova 1")
+        let isActivityAvailable = CMMotionActivityManager.isActivityAvailable()
+        print("Prova 2")
+        if isActivityAvailable {
+            print("Prova 3")
+            CMMotionActivityManager().startActivityUpdates(to: OperationQueue.main) { (motionActivity) in
+                print("Prova 4")
+                if (motionActivity!.confidence.rawValue > 0) {
+                    if (motionActivity?.walking)! {
+                        print("User is walking")
+                    } else {
+                        print("Stop 1")
+                    }
+                } else {
+                    print("Stop 2")
+                }
+            }
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        
+        
+        //determineMyCurrentLocation()
+        
+        /*
+        let motionActivityManager = CMMotionActivityManager()
+        
+        //motionActivityManager.isActivityAvailable()
+
+        motionActivityManager.startActivityUpdates(to: OperationQueue.main) { (activity) in
+            print("Prova")
+            if (activity?.automotive)! {
+                print("User using car")
+            }
+            if (activity?.cycling)! {
+                print("User is cycling")
+            }
+            if (activity?.running)! {
+                print("User is running")
+            }
+            if (activity?.walking)! {
+                print("User is walking")
+            }
+            if (activity?.stationary)! {
+                print("User is standing")
+            }
+            if (activity?.unknown)! {
+                print("Unknown activity")
+            }
+        }
+        */
+    }
+    
+    func determineMyCurrentLocation() {
+        
+        /*
+        print("Prova 1")
+        
+        let manager = CMMotionActivityManager()
+        manager.startActivityUpdates(to: .main) { (activity) in
+            
+            print("Prova 2")
+            
+            guard let activity = activity else {
+                return
+            }
+
+            var modes: Set<String> = []
+            if activity.walking {
+                modes.insert("🚶‍")
+            }
+
+            if activity.running {
+                modes.insert("🏃‍")
+            }
+
+            if activity.cycling {
+                modes.insert("🚴‍")
+            }
+
+            if activity.automotive {
+                modes.insert("🚗")
+            }
+
+            print(modes.joined(separator: ", "))
+        }
+        */
+        
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+            // locationManager.startUpdatingHeading()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation
+        
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+        
+        manager.stopUpdatingLocation()
+        
+        print("Latitudine: \(userLocation.coordinate.latitude)")
+        print("Longitudine: \(userLocation.coordinate.longitude)")
+        print("\n")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        print("Error \(error)")
+    }
+}
