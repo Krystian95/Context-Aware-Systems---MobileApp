@@ -1,0 +1,3 @@
+- Timer che chiama determineMyCurrentLocation()
+- Questione notifiche push
+- Questione chiamate HTTP per inviare i dati in GeoJSON
