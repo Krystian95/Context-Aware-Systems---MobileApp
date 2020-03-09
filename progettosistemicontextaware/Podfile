@@ -6,7 +6,11 @@ target 'progettosistemicontextaware' do
   use_frameworks!
 
   # Pods for progettosistemicontextaware
-  pod 'Firebase/Core'
+
+  # Add the Firebase pod for Google Analytics
+  pod 'Firebase/Analytics'
+
+  # Add the pod for Firebase Cloud Messaging
   pod 'Firebase/Messaging'
 
 end

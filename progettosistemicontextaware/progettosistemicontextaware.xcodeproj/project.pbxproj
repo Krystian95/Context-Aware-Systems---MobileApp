@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4EC6690606777520CFCF8C38 /* Pods_progettosistemicontextaware.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32F4563835D1EEA7FD35AE19 /* Pods_progettosistemicontextaware.framework */; };
-		ED23ADB52412B71800E2BE4C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED23ADB42412B71800E2BE4C /* GoogleService-Info.plist */; };
+		0D0A78794221FC0FD35429B9 /* Pods_progettosistemicontextaware.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 747D14B7A3475A7EE65D9C72 /* Pods_progettosistemicontextaware.framework */; };
 		EDA81FFF240FF4FA0021335F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA81FFE240FF4FA0021335F /* AppDelegate.swift */; };
 		EDA82001240FF4FA0021335F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA82000240FF4FA0021335F /* SceneDelegate.swift */; };
 		EDA82003240FF4FA0021335F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA82002240FF4FA0021335F /* ViewController.swift */; };
@@ -16,13 +15,13 @@
 		EDA82009240FF4FA0021335F /* progettosistemicontextaware.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EDA82007240FF4FA0021335F /* progettosistemicontextaware.xcdatamodeld */; };
 		EDA8200B240FF4FF0021335F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDA8200A240FF4FF0021335F /* Assets.xcassets */; };
 		EDA8200E240FF4FF0021335F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA8200C240FF4FF0021335F /* LaunchScreen.storyboard */; };
+		EDBFD0CF241659C400EEA1B9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDBFD0CE241659C400EEA1B9 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		32F4563835D1EEA7FD35AE19 /* Pods_progettosistemicontextaware.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_progettosistemicontextaware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A0F5216DDBF6EAB257B34BE /* Pods-progettosistemicontextaware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.debug.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.debug.xcconfig"; sourceTree = "<group>"; };
-		ED23ADB42412B71800E2BE4C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		ED23ADB62412B7A300E2BE4C /* progettosistemicontextaware.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = progettosistemicontextaware.entitlements; sourceTree = "<group>"; };
+		0641A04115A3A7FBF4C5EFCC /* Pods-progettosistemicontextaware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.debug.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.debug.xcconfig"; sourceTree = "<group>"; };
+		500F6252AA5BA3BDE50E1389 /* Pods-progettosistemicontextaware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.release.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.release.xcconfig"; sourceTree = "<group>"; };
+		747D14B7A3475A7EE65D9C72 /* Pods_progettosistemicontextaware.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_progettosistemicontextaware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDA81FFB240FF4FA0021335F /* progettosistemicontextaware.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = progettosistemicontextaware.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDA81FFE240FF4FA0021335F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDA82000240FF4FA0021335F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -32,7 +31,8 @@
 		EDA8200A240FF4FF0021335F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDA8200D240FF4FF0021335F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDA8200F240FF4FF0021335F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF6C0B6A3916D9592786E530 /* Pods-progettosistemicontextaware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.release.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.release.xcconfig"; sourceTree = "<group>"; };
+		EDBFD0CD2416590D00EEA1B9 /* progettosistemicontextaware.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = progettosistemicontextaware.entitlements; sourceTree = "<group>"; };
+		EDBFD0CE241659C400EEA1B9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,28 +40,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EC6690606777520CFCF8C38 /* Pods_progettosistemicontextaware.framework in Frameworks */,
+				0D0A78794221FC0FD35429B9 /* Pods_progettosistemicontextaware.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		87FF0442FBE631422260DB4D /* Frameworks */ = {
+		62EE97BE4809025A41D2ADDD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				32F4563835D1EEA7FD35AE19 /* Pods_progettosistemicontextaware.framework */,
+				747D14B7A3475A7EE65D9C72 /* Pods_progettosistemicontextaware.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		9F8E806883A8A22F81AAC0F3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7A0F5216DDBF6EAB257B34BE /* Pods-progettosistemicontextaware.debug.xcconfig */,
-				EF6C0B6A3916D9592786E530 /* Pods-progettosistemicontextaware.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		EDA81FF2240FF4FA0021335F = {
@@ -69,8 +60,8 @@
 			children = (
 				EDA81FFD240FF4FA0021335F /* progettosistemicontextaware */,
 				EDA81FFC240FF4FA0021335F /* Products */,
-				9F8E806883A8A22F81AAC0F3 /* Pods */,
-				87FF0442FBE631422260DB4D /* Frameworks */,
+				F30F6D24598F62A82AADBB10 /* Pods */,
+				62EE97BE4809025A41D2ADDD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -85,8 +76,8 @@
 		EDA81FFD240FF4FA0021335F /* progettosistemicontextaware */ = {
 			isa = PBXGroup;
 			children = (
-				ED23ADB62412B7A300E2BE4C /* progettosistemicontextaware.entitlements */,
-				ED23ADB42412B71800E2BE4C /* GoogleService-Info.plist */,
+				EDBFD0CE241659C400EEA1B9 /* GoogleService-Info.plist */,
+				EDBFD0CD2416590D00EEA1B9 /* progettosistemicontextaware.entitlements */,
 				EDA81FFE240FF4FA0021335F /* AppDelegate.swift */,
 				EDA82000240FF4FA0021335F /* SceneDelegate.swift */,
 				EDA82002240FF4FA0021335F /* ViewController.swift */,
@@ -99,6 +90,15 @@
 			path = progettosistemicontextaware;
 			sourceTree = "<group>";
 		};
+		F30F6D24598F62A82AADBB10 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0641A04115A3A7FBF4C5EFCC /* Pods-progettosistemicontextaware.debug.xcconfig */,
+				500F6252AA5BA3BDE50E1389 /* Pods-progettosistemicontextaware.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -106,11 +106,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EDA82012240FF4FF0021335F /* Build configuration list for PBXNativeTarget "progettosistemicontextaware" */;
 			buildPhases = (
-				92963AAFA44F34F682D315A4 /* [CP] Check Pods Manifest.lock */,
+				CD5CE6C303580FF8C844094B /* [CP] Check Pods Manifest.lock */,
 				EDA81FF7240FF4FA0021335F /* Sources */,
 				EDA81FF8240FF4FA0021335F /* Frameworks */,
 				EDA81FF9240FF4FA0021335F /* Resources */,
-				52428A24D33D433ED71044A6 /* [CP] Embed Pods Frameworks */,
+				751024B614D2D185C1FE64D2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,7 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDA8200E240FF4FF0021335F /* LaunchScreen.storyboard in Resources */,
-				ED23ADB52412B71800E2BE4C /* GoogleService-Info.plist in Resources */,
+				EDBFD0CF241659C400EEA1B9 /* GoogleService-Info.plist in Resources */,
 				EDA8200B240FF4FF0021335F /* Assets.xcassets in Resources */,
 				EDA82006240FF4FA0021335F /* Main.storyboard in Resources */,
 			);
@@ -169,7 +169,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		52428A24D33D433ED71044A6 /* [CP] Embed Pods Frameworks */ = {
+		751024B614D2D185C1FE64D2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -186,7 +186,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		92963AAFA44F34F682D315A4 /* [CP] Check Pods Manifest.lock */ = {
+		CD5CE6C303580FF8C844094B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -360,7 +360,7 @@
 		};
 		EDA82013240FF4FF0021335F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7A0F5216DDBF6EAB257B34BE /* Pods-progettosistemicontextaware.debug.xcconfig */;
+			baseConfigurationReference = 0641A04115A3A7FBF4C5EFCC /* Pods-progettosistemicontextaware.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = progettosistemicontextaware/progettosistemicontextaware.entitlements;
@@ -380,7 +380,7 @@
 		};
 		EDA82014240FF4FF0021335F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF6C0B6A3916D9592786E530 /* Pods-progettosistemicontextaware.release.xcconfig */;
+			baseConfigurationReference = 500F6252AA5BA3BDE50E1389 /* Pods-progettosistemicontextaware.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = progettosistemicontextaware/progettosistemicontextaware.entitlements;
