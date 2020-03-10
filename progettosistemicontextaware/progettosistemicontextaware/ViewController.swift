@@ -19,7 +19,70 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        simplePostRequestWithParamsAndErrorHandling()
     }
+    
+    
+    
+    
+    
+    
+    func simplePostRequestWithParamsAndErrorHandling(){
+        var session = URLSession.shared
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 30
+        session = URLSession(configuration: configuration)
+
+        let url = URL(string: "http://localhost:8000/")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        //request.addValue("application/json", forHTTPHeaderField: "Accept")
+
+        let parameters = ["action": "communicate-position"]
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+
+        let task = session.dataTask(with: request as URLRequest, completionHandler: { data, response, error in
+
+            if error != nil || data == nil {
+                print("\n Client error! \n")
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
+                print("\n Oops!! there is server error! \n")
+                return
+            }
+
+            guard let mime = response.mimeType, mime == "application/json" else {
+                print("\n response is not json \n")
+                return
+            }
+
+            do {
+                let json = try JSONSerialization.jsonObject(with: data!, options: [])
+                print("\n The Response is : ",json)
+            } catch {
+                print("\n JSON error: \(error.localizedDescription)")
+            }
+
+        })
+
+        task.resume()
+    }
+    
+    
+    
+    
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
