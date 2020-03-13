@@ -22,7 +22,7 @@
 		0641A04115A3A7FBF4C5EFCC /* Pods-progettosistemicontextaware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.debug.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.debug.xcconfig"; sourceTree = "<group>"; };
 		500F6252AA5BA3BDE50E1389 /* Pods-progettosistemicontextaware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-progettosistemicontextaware.release.xcconfig"; path = "Target Support Files/Pods-progettosistemicontextaware/Pods-progettosistemicontextaware.release.xcconfig"; sourceTree = "<group>"; };
 		747D14B7A3475A7EE65D9C72 /* Pods_progettosistemicontextaware.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_progettosistemicontextaware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDA81FFB240FF4FA0021335F /* progettosistemicontextaware.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = progettosistemicontextaware.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDA81FFB240FF4FA0021335F /* Progetto SCA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Progetto SCA.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDA81FFE240FF4FA0021335F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDA82000240FF4FA0021335F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EDA82002240FF4FA0021335F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 		EDA81FFC240FF4FA0021335F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EDA81FFB240FF4FA0021335F /* progettosistemicontextaware.app */,
+				EDA81FFB240FF4FA0021335F /* Progetto SCA.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,7 +118,7 @@
 			);
 			name = progettosistemicontextaware;
 			productName = progettosistemicontextaware;
-			productReference = EDA81FFB240FF4FA0021335F /* progettosistemicontextaware.app */;
+			productReference = EDA81FFB240FF4FA0021335F /* Progetto SCA.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -372,7 +372,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.viewsoftware.progettosistemicontextaware;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Progetto SCA";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -392,7 +392,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.viewsoftware.progettosistemicontextaware;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Progetto SCA";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

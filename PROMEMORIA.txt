@@ -2,3 +2,4 @@
 - Questione notifiche push
 - Questione chiamate HTTP per inviare i dati in GeoJSON
 - Mostrare i risultati sul display anziché in console
+- JSON decode della risposta (controllare che sia true) e visualizzazione sul display

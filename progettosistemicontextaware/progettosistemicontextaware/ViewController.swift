@@ -18,14 +18,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view.
         simplePostRequestWithParamsAndErrorHandling()
     }
     
-    
-    
-    
-    
+    @IBOutlet weak var labelResponse: UILabel!
     
     func simplePostRequestWithParamsAndErrorHandling(){
         var session = URLSession.shared
@@ -41,7 +39,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         //request.addValue("application/json", forHTTPHeaderField: "Accept")
 
-        let parameters = ["action": "communicate-position"]
+        let parameters = ["action": "register"]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -67,23 +65,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             }
 
             do {
+                
+                // Stampa direttamente il JSON senza parsing
                 let json = try JSONSerialization.jsonObject(with: data!, options: [])
                 print("\n The Response is : ",json)
+                print("\n")
+                
+                let json2 = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
+                let message = json2?["message"] as? String
+                let result = json2?["result"] as? Bool
+                
+                /*
+                print("Risultato: \(result!)")
+                print("Messaggio: \(message!)")
+                self.labelResponse.text = "Messaggio: \(message!)"
+                */
+                
+                print("Risultato: \(result!)")
+                if(result!){
+                    print("Messaggio: \(message!)")
+                    self.labelResponse.text = "Messaggio: \(message!)"
+                }
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
             }
-
         })
-
         task.resume()
     }
     
-    
-    
-    
-    
-    
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
