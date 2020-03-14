@@ -16,7 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
-
+    
+    var tokenAppDelegate = String()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -150,6 +152,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 extension AppDelegate : MessagingDelegate {
   // [START refresh_token]
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    
+    tokenAppDelegate = fcmToken
+    
     print("\n Firebase registration token: \(fcmToken) \n")
     
     let dataDict:[String: String] = ["token": fcmToken]
