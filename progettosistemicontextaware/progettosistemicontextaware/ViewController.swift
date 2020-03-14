@@ -19,17 +19,49 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var token: String?
     var sessionId: String?
-    var activity: String?
     var latitude: String?
     var longitude: String?
+    var activity: String?
+    
+    // Elementi UI
+    @IBOutlet weak var labelResponse: UILabel!
+    @IBOutlet weak var labelLatitude: UILabel!
+    @IBOutlet weak var labelLongitude: UILabel!
+    @IBOutlet weak var labelActivity: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    @IBOutlet weak var labelResponse: UILabel!
-    @IBOutlet weak var labelLatitude: UILabel!
-    @IBOutlet weak var labelLongitude: UILabel!
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        determineMyCurrentLocation()
+        startMotionDetection()
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { timer in
+            self.token = self.delegate.tokenAppDelegate
+            print("\n TOKEN: \(self.token ?? "nessun token")\n")
+            
+            // Test
+            self.labelLatitude.text = "Latitudine: \(self.latitude!)"
+            self.labelLongitude.text = "Longitudine: \(self.longitude!)"
+            
+            // Provare a stampare l'attività in una Text Field o in una Text View
+            //self.activity = "prova"
+            print("self?.activity: \(self.activity!)")
+            self.labelActivity.text = "Attività:" + self.activity!
+            //self.labelActivity.text = self.activity
+            
+            // Prima cosa da fare solo una volta all'inizio (con un bool, se è già stata eseguita non la rieseguire)
+            self.registerUser()
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
     func registerUser(){
         var session = URLSession.shared
@@ -95,6 +127,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 if(result!){
                     print("Messaggio: \(message!)")
                     self.labelResponse.text = "Messaggio: \(message!)"
+                    
+                    // Aggiungere timer che la riesegue ogni 5 secondi
                     self.communicatePosition()
                 }
             } catch {
@@ -174,30 +208,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         task.resume()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        determineMyCurrentLocation()
-        startMotionDetection()
-        
-        _ = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { timer in
-            self.token = self.delegate.tokenAppDelegate
-            print("\n TOKEN: \(self.token ?? "nessun token")\n")
-            
-            // Test
-            self.labelLatitude.text = "Latitudine: \(self.latitude!)"
-            self.labelLongitude.text = "Longitudine: \(self.longitude!)"
-            
-            self.registerUser()
-        }
-        
-    }
-    
     func determineMyCurrentLocation() {
         
         locationManager = CLLocationManager()
@@ -243,21 +253,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 
                 if motionActivity.stationary {
                     self?.activity = "stationary"
+                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
                     self?.activity = "walking"
+                    //print("self?.activity: \(self?.activity)")
                     print("L'utente cammina")
                 } else if motionActivity.running {
                     self?.activity = "running"
+                    //print("self?.activity: \(self?.activity)")
                     print("L'utente corre")
                 } else if motionActivity.automotive {
                     self?.activity = "auto"
+                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è in auto")
                 } else if motionActivity.cycling {
                     self?.activity = "cycling"
+                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è in bicicletta")
                 } else {
                     self?.activity = "unknown"
+                    //print("self?.activity: \(self?.activity)")
                     print("Movimento sconosciuto")
                 }
             }

@@ -36,11 +36,19 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Attività..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fQv-vk-Sr5">
+                                <rect key="frame" x="20" y="339" width="68" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="labelActivity" destination="fQv-vk-Sr5" id="Oer-AM-9FY"/>
                         <outlet property="labelLatitude" destination="Nyi-My-WpJ" id="mTH-7h-yqL"/>
                         <outlet property="labelLongitude" destination="0hL-JM-4b3" id="MKy-Mq-fEH"/>
                         <outlet property="labelResponse" destination="EBZ-ea-eXO" id="xGK-R5-kSL"/>
