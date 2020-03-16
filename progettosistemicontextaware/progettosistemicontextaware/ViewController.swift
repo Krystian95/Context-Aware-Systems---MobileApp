@@ -41,16 +41,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
         _ = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { timer in
             self.token = self.delegate.tokenAppDelegate
-            print("\n TOKEN: \(self.token ?? "nessun token")\n")
+            print("\n TOKEN: \(self.token ?? "Nessun token")\n")
             
             // Test
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             
             // Provare a stampare l'attività in una Text Field o in una Text View
-            //self.activity = "prova"
-            print("self?.activity: \(self.activity!)")
-            self.labelActivity.text = "Attività:" + self.activity!
+            print("ATTIVITÀ: \(self.activity!)")
+            self.labelActivity.text = "Attività: \(self.activity!)"
             //self.labelActivity.text = self.activity
             
             // Prima cosa da fare solo una volta all'inizio (con un bool, se è già stata eseguita non la rieseguire)
@@ -70,7 +69,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         configuration.timeoutIntervalForResource = 30
         session = URLSession(configuration: configuration)
 
-        let url = URL(string: "http://localhost:8000/")!
+        let url = URL(string: "http://192.168.1.226:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -145,7 +144,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         configuration.timeoutIntervalForResource = 30
         session = URLSession(configuration: configuration)
 
-        let url = URL(string: "http://localhost:8000/")!
+        let url = URL(string: "http://192.168.1.226:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
