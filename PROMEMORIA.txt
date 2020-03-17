@@ -1,1 +1,4 @@
-- Timer che chiama determineMyCurrentLocation() e il resto
+- Problema session ID non riconosciuto dal secondo invio in poi
+- Problema avvio server Python, errore sulla libreria numpy
+- Schermata iniziale di caricamento
+- Gestione notifiche con link
