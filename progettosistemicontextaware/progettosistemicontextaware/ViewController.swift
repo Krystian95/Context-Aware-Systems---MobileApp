@@ -36,24 +36,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        determineMyCurrentLocation()
-        startMotionDetection()
+        self.startMotionDetection()
+        self.determineMyCurrentLocation()
         
-        _ = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { timer in
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { timer in
+            
             self.token = self.delegate.tokenAppDelegate
-            print("\n TOKEN: \(self.token ?? "Nessun token")\n")
+            self.registerUser()
+        }
+        
+        Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { timer in
+            
+            self.determineMyCurrentLocation()
             
             // Test
+            //print("\nTOKEN: \(self.token ?? "Nessun token")\n")
+            //print("\nATTIVITÀ: \(self.activity!)")
+            
+            // Aggiorna dati UI
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
-            
-            // Provare a stampare l'attività in una Text Field o in una Text View
-            print("ATTIVITÀ: \(self.activity!)")
             self.labelActivity.text = "Attività: \(self.activity!)"
-            //self.labelActivity.text = self.activity
             
-            // Prima cosa da fare solo una volta all'inizio (con un bool, se è già stata eseguita non la rieseguire)
-            self.registerUser()
+            self.communicatePosition()
+            
+            // Stop del timer
+            //timer.invalidate()
         }
     }
     
@@ -69,12 +77,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         configuration.timeoutIntervalForResource = 30
         session = URLSession(configuration: configuration)
 
-        let url = URL(string: "http://192.168.1.226:8000/")!
+        let url = URL(string: "http://10.0.1.5:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        //request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         let parameters = ["action": "register", "registration_token": token]
 
@@ -102,34 +109,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             }
 
             do {
-                /*
-                // Stampa direttamente il JSON senza parsing
-                let json = try JSONSerialization.jsonObject(with: data!, options: [])
-                print("\n The Response is : ",json)
-                print("\n")
-                */
+                let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
+                let result = json?["result"] as? Bool
+                let message = json?["message"] as? String
+                self.sessionId = json?["session_id"] as? String
                 
-                /*
-                print("Risultato: \(result!)")
-                print("Messaggio: \(message!)")
-                self.labelResponse.text = "Messaggio: \(message!)"
-                */
-                
-                let json2 = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
-                let result = json2?["result"] as? Bool
-                let message = json2?["message"] as? String
-                self.sessionId = json2?["session_id"] as? String
-                
-                print("Risultato: \(result!)")
+                print("\nRisultato: \(result!)")
                 print("Session ID: \(self.sessionId!)")
+                print("Messaggio: \(message!)")
                 
-                if(result!){
-                    print("Messaggio: \(message!)")
-                    self.labelResponse.text = "Messaggio: \(message!)"
-                    
-                    // Aggiungere timer che la riesegue ogni 5 secondi
-                    self.communicatePosition()
-                }
+                self.labelResponse.text = "Messaggio: \(message!)"
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
             }
@@ -144,12 +133,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         configuration.timeoutIntervalForResource = 30
         session = URLSession(configuration: configuration)
 
-        let url = URL(string: "http://192.168.1.226:8000/")!
+        let url = URL(string: "http://10.0.1.5:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        //request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         let parameters = ["action": "communicate-position", "session_id": sessionId, "longitude": longitude, "latitude": latitude, "activity": activity]
 
@@ -177,29 +165,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             }
 
             do {
-                /*
-                // Stampa direttamente il JSON senza parsing
-                let json = try JSONSerialization.jsonObject(with: data!, options: [])
-                print("\n The Response is : ",json)
-                print("\n")
-                */
+                let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
+                let result = json?["result"] as? Bool
+                let message = json?["message"] as? String
                 
-                /*
-                print("Risultato: \(result!)")
+                print("\nRisultato: \(result!)")
                 print("Messaggio: \(message!)")
+                
                 self.labelResponse.text = "Messaggio: \(message!)"
-                */
-                
-                let json2 = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
-                let result = json2?["result"] as? Bool
-                let message = json2?["message"] as? String
-                
-                print("Risultato: \(result!)")
-                
-                if(result!){
-                    print("Messaggio: \(message!)")
-                    self.labelResponse.text = "Messaggio: \(message!)"
-                }
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
             }
@@ -231,9 +204,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         latitude = String(userLocation.coordinate.latitude)
         longitude = String(userLocation.coordinate.longitude)
         
-        print("Latitudine: \(userLocation.coordinate.latitude)")
+        print("\nLatitudine: \(userLocation.coordinate.latitude)")
         print("Longitudine: \(userLocation.coordinate.longitude)")
-        print("\n")
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
@@ -252,27 +224,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 
                 if motionActivity.stationary {
                     self?.activity = "stationary"
-                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
                     self?.activity = "walking"
-                    //print("self?.activity: \(self?.activity)")
                     print("L'utente cammina")
                 } else if motionActivity.running {
                     self?.activity = "running"
-                    //print("self?.activity: \(self?.activity)")
                     print("L'utente corre")
                 } else if motionActivity.automotive {
                     self?.activity = "auto"
-                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è in auto")
                 } else if motionActivity.cycling {
                     self?.activity = "cycling"
-                    //print("self?.activity: \(self?.activity)")
                     print("L'utente è in bicicletta")
                 } else {
                     self?.activity = "unknown"
-                    //print("self?.activity: \(self?.activity)")
                     print("Movimento sconosciuto")
                 }
             }
