@@ -51,14 +51,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             // Test
             //print("\nTOKEN: \(self.token ?? "Nessun token")\n")
-            //print("\nATTIVITÀ: \(self.activity!)")
+            print("\nATTIVITÀ: \(self.activity!)")
             
             // Aggiorna dati UI
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
             
-            self.communicatePosition()
+            if(self.activity != "stationary")
+            {
+                self.communicatePosition()
+            }
             
             // Stop del timer
             //timer.invalidate()
@@ -115,8 +118,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 self.sessionId = json?["session_id"] as? String
                 
                 print("\nRisultato: \(result!)")
-                print("Session ID: \(self.sessionId!)")
                 print("Messaggio: \(message!)")
+                print("Session ID: \(self.sessionId!)")
                 
                 self.labelResponse.text = "Messaggio: \(message!)"
             } catch {
@@ -168,9 +171,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String:Any]
                 let result = json?["result"] as? Bool
                 let message = json?["message"] as? String
+                self.sessionId = json?["session_id"] as? String
                 
                 print("\nRisultato: \(result!)")
                 print("Messaggio: \(message!)")
+                print("Session ID: \(self.sessionId!)")
                 
                 self.labelResponse.text = "Messaggio: \(message!)"
             } catch {
@@ -224,18 +229,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 
                 if motionActivity.stationary {
                     self?.activity = "stationary"
+                    //self?.activity = "walk"
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
-                    self?.activity = "walking"
+                    self?.activity = "walk"
                     print("L'utente cammina")
                 } else if motionActivity.running {
-                    self?.activity = "running"
+                    self?.activity = "walk"
                     print("L'utente corre")
                 } else if motionActivity.automotive {
-                    self?.activity = "auto"
+                    self?.activity = "car"
                     print("L'utente è in auto")
                 } else if motionActivity.cycling {
-                    self?.activity = "cycling"
+                    self?.activity = "bike"
                     print("L'utente è in bicicletta")
                 } else {
                     self?.activity = "unknown"

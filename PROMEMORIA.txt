@@ -1,4 +1,8 @@
-- Problema session ID non riconosciuto dal secondo invio in poi
-- Problema avvio server Python, errore sulla libreria numpy
+- Problema session ID non riconosciuto dal secondo invio in poi, rimandare sempre il session ID ricevuto nella chiamata precedente
+- Gestire il movimento "stationary" se lo è non inviare la nuova posizione
+
+
+
 - Schermata iniziale di caricamento
-- Gestione notifiche con link
+- Gestione notifiche con link e testo, aprire webview o visualizzarlo
+- Ogni quanto tempo campionare la posizione?
