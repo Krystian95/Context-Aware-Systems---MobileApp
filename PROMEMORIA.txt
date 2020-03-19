@@ -1,3 +1,6 @@
-- Schermata iniziale di caricamento
 - Gestione notifiche con link e testo, aprire webview o visualizzarlo
-- Ogni quanto tempo campionare la posizione?
+
+
+
+- Schermata iniziale di caricamento
+- Tempo di campionamento della posizione differente in base all'attività rilevata

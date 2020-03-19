@@ -12,6 +12,9 @@ import CoreMotion
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     
+    var overlay : UIView?
+    var activityIndicator = UIActivityIndicatorView()
+    var strLabel = UILabel()
     var locationManager:CLLocationManager!
     private let manager = CMMotionManager()
     private let activityManager = CMMotionActivityManager()
@@ -22,6 +25,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var latitude: String?
     var longitude: String?
     var activity: String?
+    var repetitionTime: Double? = 5
     
     // Elementi UI
     @IBOutlet weak var labelResponse: UILabel!
@@ -31,6 +35,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        overlay = UIView(frame: view.frame)
+        overlay!.backgroundColor = UIColor.black
+        overlay!.alpha = 1
+        
+        strLabel = UILabel(frame: CGRect(x: 105, y: 390, width: 250, height: 60))
+        strLabel.text = "Caricamento in corso..."
+        strLabel.font = .systemFont(ofSize: 20, weight: .medium)
+        strLabel.textColor = UIColor(white: 1, alpha: 1)
+        
+        activityIndicator = UIActivityIndicatorView(style: .white)
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: 120, height: 120)
+        activityIndicator.startAnimating()
+        activityIndicator.center = self.view.center
+        
+        view.addSubview(overlay!)
+        view.addSubview(activityIndicator)
+        view.addSubview(strLabel)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,29 +61,35 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.startMotionDetection()
         self.determineMyCurrentLocation()
         
-        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { timer in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
             
             self.token = self.delegate.tokenAppDelegate
             self.registerUser()
         }
         
-        Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: repetitionTime!, repeats: true) { timer in
             
             self.determineMyCurrentLocation()
             
             // Test
-            //print("\nTOKEN: \(self.token ?? "Nessun token")\n")
+            print("\nTOKEN: \(self.token ?? "Nessun token")\n")
             print("\nATTIVITÀ: \(self.activity!)")
+            print("\nREPETITION TIME: \(self.repetitionTime!)")
             
             // Aggiorna dati UI
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
             
-            if(self.activity != "stationary")
-            {
+            self.overlay?.removeFromSuperview()
+            self.activityIndicator.removeFromSuperview()
+            self.strLabel.removeFromSuperview()
+            
+            // Se l'utente è fermo non chiama communicatePosition()
+            //if(self.activity != "stationary")
+            //{
                 self.communicatePosition()
-            }
+            //}
             
             // Stop del timer
             //timer.invalidate()
@@ -228,23 +256,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 }
                 
                 if motionActivity.stationary {
-                    self?.activity = "stationary"
-                    //self?.activity = "walk"
+                    //self?.activity = "stationary"
+                    self?.activity = "walk"
+                    self?.repetitionTime = 3
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
                     self?.activity = "walk"
+                    self?.repetitionTime = 5
                     print("L'utente cammina")
                 } else if motionActivity.running {
                     self?.activity = "walk"
+                    self?.repetitionTime = 7
                     print("L'utente corre")
                 } else if motionActivity.automotive {
                     self?.activity = "car"
+                    self?.repetitionTime = 20
                     print("L'utente è in auto")
                 } else if motionActivity.cycling {
                     self?.activity = "bike"
+                    self?.repetitionTime = 10
                     print("L'utente è in bicicletta")
                 } else {
                     self?.activity = "unknown"
+                    self?.repetitionTime = 5
                     print("Movimento sconosciuto")
                 }
             }
