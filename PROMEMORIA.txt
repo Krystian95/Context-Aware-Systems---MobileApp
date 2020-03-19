@@ -1,6 +1,1 @@
 - Gestione notifiche con link e testo, aprire webview o visualizzarlo
-
-
-
-- Schermata iniziale di caricamento
-- Tempo di campionamento della posizione differente in base all'attività rilevata
