@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       // If you are receiving a notification message while your app is in the background,
       // this callback will not be fired till the user taps on the notification launching the application.
       // TODO: Handle data of notification
-
+      
       // With swizzling disabled you must let Messaging know about the message, for Analytics
       // Messaging.messaging().appDidReceiveMessage(userInfo)
 
@@ -66,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
 
       // Print full message.
+      //print("CONTENUTO NOTIFICA 1")
       print(userInfo)
     }
 
@@ -74,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       // If you are receiving a notification message while your app is in the background,
       // this callback will not be fired till the user taps on the notification launching the application.
       // TODO: Handle data of notification
-
+      
       // With swizzling disabled you must let Messaging know about the message, for Analytics
       // Messaging.messaging().appDidReceiveMessage(userInfo)
 
@@ -84,9 +85,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
 
       // Print full message.
+      //print("CONTENUTO NOTIFICA 2")
       print(userInfo)
 
       completionHandler(UIBackgroundFetchResult.newData)
+    }
+
+    @available(iOS 10.0, *)
+    //  Notification interaction response call back
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        // Dati della notifica:
+        //print("Notification data: \(response.notification.request.content.userInfo)")
+        
+        let data = response.notification.request.content.userInfo as! [String: AnyObject]
+        let aps = data["aps"]
+        let alert = aps?["alert"]! as! NSDictionary
+        let body = alert["body"] as! String
+        let title = alert["title"] as! String
+        print("Body: \(body)")
+        print("Title: \(title)")
     }
 
     // MARK: UISceneSession Lifecycle
