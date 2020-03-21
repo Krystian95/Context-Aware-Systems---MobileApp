@@ -9,7 +9,9 @@
 import UIKit
 import CoreLocation
 import CoreMotion
+//import WebKit
 
+// WKNavigationDelegate
 class ViewController: UIViewController, CLLocationManagerDelegate {
     
     var overlay : UIView?
@@ -32,6 +34,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var labelLatitude: UILabel!
     @IBOutlet weak var labelLongitude: UILabel!
     @IBOutlet weak var labelActivity: UILabel!
+    @IBOutlet weak var labelNotificationContent: UILabel!
+    //@IBOutlet weak var webViewOutput: WKWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +65,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.startMotionDetection()
         self.determineMyCurrentLocation()
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
             
             self.token = self.delegate.tokenAppDelegate
             self.registerUser()
@@ -95,6 +99,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             //timer.invalidate()
         }
     }
+    
+    /*
+    func updateLabelNotificationContent(notificationContent: String) {
+        self.labelNotificationContent.text = "Contenuto notifica: \(notificationContent)"
+    }*/
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

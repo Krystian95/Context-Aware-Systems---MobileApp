@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
-    
     var tokenAppDelegate = String()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -105,8 +104,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let alert = aps?["alert"]! as! NSDictionary
         let body = alert["body"] as! String
         let title = alert["title"] as! String
-        print("Body: \(body)")
         print("Title: \(title)")
+        print("Body: \(body)")
+        
+        //ViewController().updateLabelNotificationContent(notificationContent: body)
     }
 
     // MARK: UISceneSession Lifecycle
