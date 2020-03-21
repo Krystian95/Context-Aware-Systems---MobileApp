@@ -103,11 +103,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let aps = data["aps"]
         let alert = aps?["alert"]! as! NSDictionary
         let body = alert["body"] as! String
-        let title = alert["title"] as! String
-        print("Title: \(title)")
+        //let title = alert["title"] as! String
+        //print("Title: \(title)")
         print("Body: \(body)")
         
-        //ViewController().updateLabelNotificationContent(notificationContent: body)
+        ViewController().updateLabelNotificationContent(notificationContent: body)
     }
 
     // MARK: UISceneSession Lifecycle

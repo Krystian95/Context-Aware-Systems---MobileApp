@@ -100,10 +100,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    /*
     func updateLabelNotificationContent(notificationContent: String) {
+        print("CONTENUTO NOTIFICA: \(notificationContent)")
         self.labelNotificationContent.text = "Contenuto notifica: \(notificationContent)"
-    }*/
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
