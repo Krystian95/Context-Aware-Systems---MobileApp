@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
     var tokenAppDelegate = String()
+    var contentAppDelegate : String? = ""
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -91,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     @available(iOS 10.0, *)
-    //  Notification interaction response call back
+    // Notification interaction response call back
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -107,7 +108,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         //print("Title: \(title)")
         print("Body: \(body)")
         
-        ViewController().updateLabelNotificationContent(notificationContent: body)
+        contentAppDelegate = body
+        
+        /*
+        DispatchQueue.main.async{
+           ViewController().labelNotificationContent?.text = "BBB"
+        }
+        */
+        
+        //ViewController().updateLabelNotificationContent(notificationContent: body)
     }
 
     // MARK: UISceneSession Lifecycle

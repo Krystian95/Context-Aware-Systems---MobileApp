@@ -9,10 +9,9 @@
 import UIKit
 import CoreLocation
 import CoreMotion
-//import WebKit
+import WebKit
 
-// WKNavigationDelegate
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationDelegate {
     
     var overlay : UIView?
     var activityIndicator = UIActivityIndicatorView()
@@ -20,7 +19,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var locationManager:CLLocationManager!
     private let manager = CMMotionManager()
     private let activityManager = CMMotionActivityManager()
-    
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var token: String?
     var sessionId: String?
@@ -28,6 +26,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var longitude: String?
     var activity: String?
     var repetitionTime: Double? = 5
+    var temp: String? = ""
     
     // Elementi UI
     @IBOutlet weak var labelResponse: UILabel!
@@ -35,7 +34,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var labelLongitude: UILabel!
     @IBOutlet weak var labelActivity: UILabel!
     @IBOutlet weak var labelNotificationContent: UILabel!
-    //@IBOutlet weak var webViewOutput: WKWebView!
+    @IBOutlet weak var webViewOutput: WKWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +64,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.startMotionDetection()
         self.determineMyCurrentLocation()
         
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            
+            if self.temp != self.delegate.contentAppDelegate! {
+                if self.delegate.contentAppDelegate!.hasPrefix("http") {
+                    // Aggiorna dati UI
+                    self.webViewOutput.load(self.delegate.contentAppDelegate!)
+                    self.labelNotificationContent.text = "Notifica: \(self.delegate.contentAppDelegate!)"
+                } else {
+                    // Aggiorna dati UI
+                    self.webViewOutput.load(URLRequest(url: URL(string:"about:blank")!))
+                    self.labelNotificationContent.text = "Notifica: \(self.delegate.contentAppDelegate!)"
+                }
+            }
+            self.temp = self.delegate.contentAppDelegate!
+        }
+        
         Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
             
             self.token = self.delegate.tokenAppDelegate
@@ -75,11 +90,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             self.determineMyCurrentLocation()
             
+            /*
             // Test
             print("\nTOKEN: \(self.token ?? "Nessun token")\n")
             print("\nATTIVITÀ: \(self.activity!)")
             print("\nREPETITION TIME: \(self.repetitionTime!)")
-            
+            */
+ 
             // Aggiorna dati UI
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
@@ -100,14 +117,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    /*
     func updateLabelNotificationContent(notificationContent: String) {
+        
         print("CONTENUTO NOTIFICA: \(notificationContent)")
-        self.labelNotificationContent.text = "Contenuto notifica: \(notificationContent)"
+        
+        DispatchQueue.main.async() {
+            print("PROVA")
+            self.labelNotificationContent?.text = "Contenuto notifica: \(notificationContent)"
+            //self.labelNotificationContent?.text = "AAA"
+        }
     }
+    */
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func registerUser(){
@@ -291,6 +315,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                     print("Movimento sconosciuto")
                 }
             }
+        }
+    }
+}
+
+extension WKWebView {
+    func load(_ urlString: String) {
+        if let url = URL(string: urlString) {
+            let request = URLRequest(url: url)
+            load(request)
         }
     }
 }

@@ -1,1 +1,6 @@
 - Gestione notifiche con link e testo, aprire webview o visualizzarlo
+- Ritorno GeoJSON dall'app al server?
+- Punto 3 del frontend
+- Chiedere gli opzionali
+- Icona app (quella di Dov'è)
+- Nome progetto (GeoJoy)
