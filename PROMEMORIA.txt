@@ -1,5 +1,2 @@
-- Ritorno GeoJSON dall'app al server?
-- Punto 3 del frontend
-- Chiedere gli opzionali al prof
-- Icona app (quella di Dov'è)
-- Nome progetto (GeoJoy)
+- Icona app: quella di Dov'è
+- Nome app: GeoJoy
