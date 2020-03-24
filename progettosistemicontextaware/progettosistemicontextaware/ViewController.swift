@@ -81,7 +81,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         }
         
         Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
-            
             self.token = self.delegate.tokenAppDelegate
             self.registerUser()
         }
