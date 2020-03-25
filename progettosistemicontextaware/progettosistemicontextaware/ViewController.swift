@@ -101,6 +101,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
             
+            // Rimuovi elementi UI caricamento app
             self.overlay?.removeFromSuperview()
             self.activityIndicator.removeFromSuperview()
             self.strLabel.removeFromSuperview()
@@ -115,19 +116,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             //timer.invalidate()
         }
     }
-    
-    /*
-    func updateLabelNotificationContent(notificationContent: String) {
-        
-        print("CONTENUTO NOTIFICA: \(notificationContent)")
-        
-        DispatchQueue.main.async() {
-            print("PROVA")
-            self.labelNotificationContent?.text = "Contenuto notifica: \(notificationContent)"
-            //self.labelNotificationContent?.text = "AAA"
-        }
-    }
-    */
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

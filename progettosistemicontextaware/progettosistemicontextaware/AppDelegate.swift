@@ -66,7 +66,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
 
       // Print full message.
-      //print("CONTENUTO NOTIFICA 1")
       print(userInfo)
     }
 
@@ -85,7 +84,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
 
       // Print full message.
-      //print("CONTENUTO NOTIFICA 2")
       print(userInfo)
 
       completionHandler(UIBackgroundFetchResult.newData)
@@ -105,18 +103,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let alert = aps?["alert"]! as! NSDictionary
         let body = alert["body"] as! String
         //let title = alert["title"] as! String
+        
         //print("Title: \(title)")
         print("Body: \(body)")
-        
         contentAppDelegate = body
-        
-        /*
-        DispatchQueue.main.async{
-           ViewController().labelNotificationContent?.text = "BBB"
-        }
-        */
-        
-        //ViewController().updateLabelNotificationContent(notificationContent: body)
     }
 
     // MARK: UISceneSession Lifecycle
