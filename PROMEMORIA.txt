@@ -1,5 +1,0 @@
--while finché il token è null ripeti timer
--self.determineMyCurrentLocation() iniziale
--unknown nell'if insieme a stationary
--Assicurarsi che la prima communicatePosition() sia lanciata dopo che registerUser() abbia ricevuto il session ID
-- Nascondere WebView anziché farla diventare grigia

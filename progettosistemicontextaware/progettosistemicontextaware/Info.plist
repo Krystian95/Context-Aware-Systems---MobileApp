@@ -26,13 +26,13 @@
 		<true/>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Will you allow this app to always know your actual  location</string>
+	<string>Consenti a GeoJoy di conoscere la tua posizione</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Will you allow this app to always know your actual location</string>
+	<string>Consenti a GeoJoy di conoscere la tua posizione</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Will you allow this app to know your actual location</string>
+	<string>Consenti a GeoJoy di conoscere la tua posizione</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Will you allow this app to know your motion</string>
+	<string>Consenti a GeoJoy di conoscere la tua attività di movimento</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -67,8 +67,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
