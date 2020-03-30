@@ -208,7 +208,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters = ["action": "communicate-position", "session_id": sessionId, "longitude": longitude, "latitude": latitude, "activity": activity]
+        let parameters: [String: Any] = ["action": "communicate-position", "properties": ["session_id": sessionId, "activity": activity],         "geometry": ["type": "Point", "coordinates": [latitude, longitude]]]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
