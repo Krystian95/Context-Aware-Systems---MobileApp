@@ -28,6 +28,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     var repetitionTime: Double? = 5
     var temp: String? = ""
     let imgView = UIImageView()
+    //var activityTypeLocation: String? = ""
     
     // Elementi UI
     @IBOutlet weak var labelLatitude: UILabel!
@@ -46,7 +47,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         overlay!.alpha = 1
         
         imgView.frame = CGRect(x: 145, y: 188, width: 120, height: 120)
-        imgView.image = UIImage(named: "Image")//Assign image to ImageView
+        imgView.image = UIImage(named: "Image")
         
         strLabel = UILabel(frame: CGRect(x: 65, y: 405, width: 300, height: 60))
         strLabel.text = "Caricamento di GeoJoy in corso..."
@@ -60,7 +61,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         
         self.webViewOutput.isHidden = true
         view.addSubview(overlay!)
-        view.addSubview(imgView)//Add image to our view
+        view.addSubview(imgView)
         view.addSubview(activityIndicator)
         view.addSubview(strLabel)
     }
@@ -91,37 +92,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         
         // Preleva il token di Firebase e lancia registerUser()
         Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { timer in
-            //print("\nTIMER 1")
             self.token = self.delegate.tokenAppDelegate
             self.registerUser()
             
+            // Rimuovi elementi UI caricamento app
+            self.overlay?.removeFromSuperview()
+            self.imgView.removeFromSuperview()
+            self.activityIndicator.removeFromSuperview()
+            self.strLabel.removeFromSuperview()
+            
+            // Aggiorna dati UI
+            self.labelLatitude.text = "Latitudine: \(self.latitude!)"
+            self.labelLongitude.text = "Longitudine: \(self.longitude!)"
+            self.labelActivity.text = "Attività: \(self.activity!)"
+            
             // Aggiorna dati UI e lancia communicatePosition()
             Timer.scheduledTimer(withTimeInterval: self.repetitionTime!, repeats: true) { timer in
-                //print("\nTIMER 2")
-                self.determineMyCurrentLocation()
-                
-                /*
-                // Test output
-                print("\nToken: \(self.token ?? "Nessun token")\n")
-                print("\nAttività: \(self.activity!)")
-                print("\nRepetition time: \(self.repetitionTime!)")
-                */
-                
-                // Aggiorna dati UI
-                self.labelLatitude.text = "Latitudine: \(self.latitude!)"
-                self.labelLongitude.text = "Longitudine: \(self.longitude!)"
-                self.labelActivity.text = "Attività: \(self.activity!)"
-                
-                // Rimuovi elementi UI caricamento app
-                self.overlay?.removeFromSuperview()
-                self.imgView.removeFromSuperview()
-                self.activityIndicator.removeFromSuperview()
-                self.strLabel.removeFromSuperview()
-                
                 // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
                 if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
+                    self.determineMyCurrentLocation()
+                    
+                    // Aggiorna dati UI
+                    self.labelLatitude.text = "Latitudine: \(self.latitude!)"
+                    self.labelLongitude.text = "Longitudine: \(self.longitude!)"
+                    self.labelActivity.text = "Attività: \(self.activity!)"
+                    
                     self.communicatePosition()
                 } else {
+                    self.labelActivity.text = "Attività: \(self.activity!)"
                     print("Utente fermo, movimento sconosciuto o Session ID non ricevuto")
                 }
                 
@@ -208,7 +206,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters: [String: Any] = ["action": "communicate-position", "properties": ["session_id": sessionId, "activity": activity],         "geometry": ["type": "Point", "coordinates": [latitude, longitude]]]
+        let parameters: [String: Any] = ["action": "communicate-position", "properties": ["session_id": sessionId, "activity": activity], "geometry": ["type": "Point", "coordinates": [latitude, longitude]]]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -255,7 +253,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     func determineMyCurrentLocation() {
         locationManager = CLLocationManager()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.pausesLocationUpdatesAutomatically = true
+        locationManager.allowsBackgroundLocationUpdates = true
         locationManager.requestAlwaysAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
@@ -275,6 +275,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         
         // Interrompi aggiornamento posizione, verrà rilanciato solo ad ogni ciclo del timer
         manager.stopUpdatingLocation()
+        manager.allowsBackgroundLocationUpdates = false
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -293,7 +294,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 
                 if motionActivity.stationary {
                     self?.activity = "stationary"
-                    //self?.activity = "walk"
                     self?.repetitionTime = 5
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
