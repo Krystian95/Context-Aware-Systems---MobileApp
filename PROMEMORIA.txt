@@ -1,1 +1,4 @@
-Relazione motion activity sempre attivo: https://nshipster.com/cmmotionactivity/
+- Questione sleep del timer se l'utente rimane entro 50 metri
+- Questione fake position inventarsi qualcosa
+- Relazione:
+	- MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/
