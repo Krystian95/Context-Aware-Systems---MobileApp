@@ -25,9 +25,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     var latitude: String? = ""
     var longitude: String? = ""
     var activity: String? = ""
-    var repetitionTime: Double? = 5
+    var latitudePrevious: String? = ""
+    var longitudePrevious: String? = ""
+    var activityPrevious: String? = ""
+    var activityTimer: Double? = 5
+    var defaultTimer: Double = 5
     var temp: String? = ""
     let imgView = UIImageView()
+    var toSend: Bool = true
     //var activityTypeLocation: String? = ""
     
     // Elementi UI
@@ -105,26 +110,51 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
-            
+            print("TIMER1 \(self.defaultTimer)")
             // Aggiorna dati UI e lancia communicatePosition()
-            Timer.scheduledTimer(withTimeInterval: self.repetitionTime!, repeats: true) { timer in
+            Timer.scheduledTimer(withTimeInterval: self.defaultTimer, repeats: true) { timer in
+                
                 // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
                 if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
                     self.determineMyCurrentLocation()
                     
-                    // Aggiorna dati UI
-                    self.labelLatitude.text = "Latitudine: \(self.latitude!)"
-                    self.labelLongitude.text = "Longitudine: \(self.longitude!)"
-                    self.labelActivity.text = "Attività: \(self.activity!)"
+                    let coordinatePrevious = CLLocation(latitude: (self.latitudePrevious! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
+                    let coordinateActual = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitude! as NSString).doubleValue)
+
+                    let distanceMeters = coordinatePrevious.distance(from: coordinateActual)
                     
-                    self.communicatePosition()
+                    // Aggiorna dati precedenti
+                    self.latitudePrevious = self.latitude
+                    self.longitudePrevious = self.longitude
+                    self.activityPrevious = self.activity
+                    
+                    print(distanceMeters)
+                    
+                    self.toSend = true
+                    if((self.activity == self.activityPrevious) && (distanceMeters < 50)) {
+                        self.toSend = false
+                    }
+                    
+                    if(self.toSend) {
+                        // Aggiorna dati UI
+                        self.labelLatitude.text = "Latitudine: \(self.latitude!)"
+                        self.labelLongitude.text = "Longitudine: \(self.longitude!)"
+                        self.labelActivity.text = "Attività: \(self.activity!)"
+                        
+                        self.communicatePosition()
+                        
+                        self.defaultTimer = self.activityTimer!
+                        print("BBB")
+                    } else {
+                        print("AAA \(self.defaultTimer)")
+                        let tempTimer = pow(self.defaultTimer, 1.2)
+                        self.defaultTimer = tempTimer
+                    }
                 } else {
                     self.labelActivity.text = "Attività: \(self.activity!)"
                     print("Utente fermo, movimento sconosciuto o Session ID non ricevuto")
                 }
-                
-                // Stop timer
-                //timer.invalidate()
+                print("TIMER2 \(self.defaultTimer)")
             }
         }
     }
@@ -206,7 +236,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters: [String: Any] = ["action": "communicate-position", "properties": ["session_id": sessionId, "activity": activity], "geometry": ["type": "Point", "coordinates": [latitude, longitude]]]
+        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitude, longitude]], "properties": ["action": "communicate-position", "session_id": sessionId, "activity": activity]]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -294,27 +324,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 
                 if motionActivity.stationary {
                     self?.activity = "stationary"
-                    self?.repetitionTime = 5
+                    self?.activityTimer = 5
                     print("L'utente è fermo")
                 } else if motionActivity.walking {
                     self?.activity = "walk"
-                    self?.repetitionTime = 5
+                    self?.activityTimer = 5
                     print("L'utente cammina")
                 } else if motionActivity.running {
                     self?.activity = "walk"
-                    self?.repetitionTime = 5
+                    self?.activityTimer = 5
                     print("L'utente corre")
                 } else if motionActivity.automotive {
                     self?.activity = "car"
-                    self?.repetitionTime = 20
+                    self?.activityTimer = 20
                     print("L'utente è in auto")
                 } else if motionActivity.cycling {
                     self?.activity = "bike"
-                    self?.repetitionTime = 10
+                    self?.activityTimer = 10
                     print("L'utente è in bicicletta")
                 } else {
                     self?.activity = "unknown"
-                    self?.repetitionTime = 5
+                    self?.activityTimer = 5
                     print("Movimento sconosciuto")
                 }
             }
