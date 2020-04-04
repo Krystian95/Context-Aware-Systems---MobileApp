@@ -1,4 +1,7 @@
 - Questione sleep del timer se l'utente rimane entro 50 metri
+	- Problema modifica del timer: 
+	https://stackoverflow.com/questions/38728011/swift-nstimer-dynamically-changing-interval
+	https://stackoverflow.com/questions/36638868/changing-the-interval-of-a-timer-in-an-if-statement
 - Questione fake position inventarsi qualcosa
 - Relazione:
 	- MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/
