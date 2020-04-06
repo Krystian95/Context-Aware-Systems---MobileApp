@@ -1,6 +1,3 @@
-- Questione sleep del timer se l'utente rimane entro 50 metri
-	- Problema modifica del timer: 
-	https://stackoverflow.com/questions/4152097/how-do-i-change-timing-for-nstimer
 - Questione fake position inventarsi qualcosa: come impedire che vengano visualizzate notifiche contenenti un determinato ID generato quando si esegue communicatePosition()
 - Label e risposta server con timestamp di quando è stata eseguita communicatePosition()
 - Relazione:
