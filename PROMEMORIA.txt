@@ -1,7 +1,7 @@
 - Questione sleep del timer se l'utente rimane entro 50 metri
 	- Problema modifica del timer: 
-	https://stackoverflow.com/questions/38728011/swift-nstimer-dynamically-changing-interval
-	https://stackoverflow.com/questions/36638868/changing-the-interval-of-a-timer-in-an-if-statement
-- Questione fake position inventarsi qualcosa
+	https://stackoverflow.com/questions/4152097/how-do-i-change-timing-for-nstimer
+- Questione fake position inventarsi qualcosa: come impedire che vengano visualizzate notifiche contenenti un determinato ID generato quando si esegue communicatePosition()
+- Label e risposta server con timestamp di quando è stata eseguita communicatePosition()
 - Relazione:
 	- MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/

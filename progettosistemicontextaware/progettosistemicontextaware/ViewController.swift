@@ -33,7 +33,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     var temp: String? = ""
     let imgView = UIImageView()
     var toSend: Bool = true
-    //var activityTypeLocation: String? = ""
+    var timeInterval: Double = 5
     
     // Elementi UI
     @IBOutlet weak var labelLatitude: UILabel!
@@ -110,52 +110,72 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelLatitude.text = "Latitudine: \(self.latitude!)"
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
-            print("TIMER1 \(self.defaultTimer)")
-            // Aggiorna dati UI e lancia communicatePosition()
-            Timer.scheduledTimer(withTimeInterval: self.defaultTimer, repeats: true) { timer in
-                
-                // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
-                if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
-                    self.determineMyCurrentLocation()
-                    
-                    let coordinatePrevious = CLLocation(latitude: (self.latitudePrevious! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
-                    let coordinateActual = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitude! as NSString).doubleValue)
+            
+            print("TIMER 1: \(self.timeInterval)")
+            
+            Timer.scheduledTimer(timeInterval: self.timeInterval, target: self, selector: #selector(self.onTimer), userInfo: nil, repeats: true)
+        }
+    }
+    
+    @objc func onTimer(timer: Timer) {
+        print("TIMER 2: \(self.timeInterval)")
+        
+        // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
+        if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
+            self.determineMyCurrentLocation()
+            
+            let coordinatePrevious = CLLocation(latitude: (self.latitudePrevious! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
+            let coordinateActual = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitude! as NSString).doubleValue)
 
-                    let distanceMeters = coordinatePrevious.distance(from: coordinateActual)
-                    
-                    // Aggiorna dati precedenti
-                    self.latitudePrevious = self.latitude
-                    self.longitudePrevious = self.longitude
-                    self.activityPrevious = self.activity
-                    
-                    print(distanceMeters)
-                    
-                    self.toSend = true
-                    if((self.activity == self.activityPrevious) && (distanceMeters < 50)) {
-                        self.toSend = false
-                    }
-                    
-                    if(self.toSend) {
-                        // Aggiorna dati UI
-                        self.labelLatitude.text = "Latitudine: \(self.latitude!)"
-                        self.labelLongitude.text = "Longitudine: \(self.longitude!)"
-                        self.labelActivity.text = "Attività: \(self.activity!)"
-                        
-                        self.communicatePosition()
-                        
-                        self.defaultTimer = self.activityTimer!
-                        print("BBB")
-                    } else {
-                        print("AAA \(self.defaultTimer)")
-                        let tempTimer = pow(self.defaultTimer, 1.2)
-                        self.defaultTimer = tempTimer
-                    }
-                } else {
-                    self.labelActivity.text = "Attività: \(self.activity!)"
-                    print("Utente fermo, movimento sconosciuto o Session ID non ricevuto")
-                }
-                print("TIMER2 \(self.defaultTimer)")
+            let distanceMeters = coordinatePrevious.distance(from: coordinateActual)
+            
+            print("Distanza calcolata: \(distanceMeters)")
+            
+            // Aggiorna dati precedenti
+            self.latitudePrevious = self.latitude
+            self.longitudePrevious = self.longitude
+            self.activityPrevious = self.activity
+            
+            // Aggiorna dati UI
+            self.labelLatitude.text = "Latitudine: \(self.latitude!)"
+            self.labelLongitude.text = "Longitudine: \(self.longitude!)"
+            self.labelActivity.text = "Attività: \(self.activity!)"
+            
+            self.toSend = true
+            if((self.activity == self.activityPrevious) && (distanceMeters < 50)) {
+                self.toSend = false
             }
+            
+            if(self.toSend) {
+                self.communicatePosition()
+                timeInterval = self.activityTimer!
+                timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
+                print("LONTANO: \(timeInterval)")
+            } else {
+                switch self.activity! {
+                case "walk":
+                    timeInterval = pow(timeInterval, 1.2)
+                    timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
+                    print("VICINO walk: \(timeInterval)")
+                case "bike":
+                    timeInterval = pow(timeInterval, 1.1)
+                    timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
+                    print("VICINO bike: \(timeInterval)")
+                case "car":
+                    timeInterval = pow(timeInterval, 1.05)
+                    timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
+                    print("VICINO car: \(timeInterval)")
+                default:
+                    timeInterval = pow(timeInterval, 1.2)
+                    timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
+                    print("VICINO default: \(timeInterval)")
+                }
+            }
+        } else {
+            self.labelActivity.text = "Attività: \(self.activity!)"
+            print("Utente fermo, movimento sconosciuto o Session ID non ricevuto")
+            timeInterval = self.activityTimer!
+            timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
         }
     }
     
