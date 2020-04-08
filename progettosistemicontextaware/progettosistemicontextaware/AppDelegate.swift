@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var tokenAppDelegate : String? = ""
     var contentAppDelegate : String? = ""
     
+    //didReceive response: UNNotificationResponse,
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -27,14 +28,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         Messaging.messaging().delegate = self
         
+        /*
+        let data = response.notification.request.content.userInfo as! [String: AnyObject]
+        let aps = data["aps"]
+        let alert = aps?["alert"]! as! NSDictionary
+        let body = alert["body"] as! String
+        let custom_data = alert["custom_data"] as! NSDictionary
+        let position_id_device = custom_data["position_id_device"] as! String
+        
+        print("position_id_device: \(position_id_device)")
+        */
+        
         if #available(iOS 10.0, *) {
-          // For iOS 10 display notification (sent via APNS)
-          UNUserNotificationCenter.current().delegate = self
-
-          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-          UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
+          //if(position_id_device == "1234567890"){
+              // For iOS 10 display notification (sent via APNS)
+              UNUserNotificationCenter.current().delegate = self
+              print("WELAAA5")
+              let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+              UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+         // }
         } else {
           let settings: UIUserNotificationSettings =
           UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
@@ -49,7 +63,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // Visualizzazione della notifica con l'app aperta
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
     {
-        completionHandler([.alert, .badge, .sound])
+        print("WELAAA4")
+        print("Notification data: \(notification.request.content.userInfo)")
+        
+        let data = notification.request.content.userInfo as! [String: AnyObject]
+        let aps = data["aps"]
+        let alert = aps?["alert"]! as! NSDictionary
+        let body = alert["body"] as! String
+        let position_id_device = alert["position_id_device"] as! String
+        
+        print("position_id_device: \(position_id_device)")
+        
+        if(position_id_device == "1234567890"){
+            completionHandler([.alert, .badge, .sound])
+        } else {
+            completionHandler([])
+        }
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
@@ -67,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
       // Print full message.
       print(userInfo)
+      print("WELAAA1")
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -85,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
       // Print full message.
       print(userInfo)
-
+      print("WELAAA2")
       completionHandler(UIBackgroundFetchResult.newData)
     }
 
@@ -107,6 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         //print("Title: \(title)")
         print("Body: \(body)")
         contentAppDelegate = body
+        print("WELAAA3")
     }
 
     // MARK: UISceneSession Lifecycle

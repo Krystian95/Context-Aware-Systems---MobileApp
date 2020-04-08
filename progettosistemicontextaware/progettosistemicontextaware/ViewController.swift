@@ -147,6 +147,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             }
             
             if(self.toSend) {
+                // Genero il position ID corretto, in un array list di array inserisco position ID, latitudine e longitudine corretti e finti, mischio random l'array. Con un for invoco n volte communicatePosition() passandogli ogni volta una tripletta diversa, solo una sarà quella giusta. In AppDelegate recupero il position ID corretto.
                 self.communicatePosition()
                 timeInterval = self.activityTimer!
                 timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
