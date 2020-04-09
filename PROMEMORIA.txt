@@ -1,4 +1,5 @@
-- Questione fake position inventarsi qualcosa: come impedire che vengano visualizzate notifiche contenenti un determinato ID generato quando si esegue communicatePosition()
+- Questione fake position: risolvere problema client error con molti invii di posizioni finte. Inserire tutti i position ID in un array e quando arriva la notifica si controlla se il position ID è presente nell'array
+
 - Label e risposta server con timestamp di quando è stata eseguita communicatePosition()
-- Relazione:
-	- MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/
+
+- Relazione: MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/

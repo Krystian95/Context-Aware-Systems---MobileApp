@@ -34,6 +34,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     let imgView = UIImageView()
     var toSend: Bool = true
     var timeInterval: Double = 5
+    var positionId: String? = ""
     
     // Elementi UI
     @IBOutlet weak var labelLatitude: UILabel!
@@ -147,8 +148,98 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             }
             
             if(self.toSend) {
-                // Genero il position ID corretto, in un array list di array inserisco position ID, latitudine e longitudine corretti e finti, mischio random l'array. Con un for invoco n volte communicatePosition() passandogli ogni volta una tripletta diversa, solo una sarà quella giusta. In AppDelegate recupero il position ID corretto.
-                self.communicatePosition()
+                // Genero il position ID corretto, in un array di array inserisco position ID, latitudine e longitudine corretti e finti, mischio random l'array. Con un for invoco n volte communicatePosition() passandogli ogni volta una tripletta diversa, solo una sarà quella giusta. In AppDelegate recupero il position ID corretto.
+                
+                let numberOfFakePosition: Int = 10
+                var arrayOfArrayData = [[String]]()
+                var arrayData = [String]()
+                
+                // Generazione session ID vero
+                positionId = String.random()
+                
+                print("positionId: \(positionId!)")
+                print("latitude: \(latitude!)")
+                print("longitude: \(longitude!)")
+                
+                // Aggiunta session ID e posizioni vere
+                arrayData.append(positionId!)
+                arrayData.append(latitude!)
+                arrayData.append(longitude!)
+                
+                arrayOfArrayData.append(arrayData)
+                
+                // Generzione posizioni finte
+                let myLocation = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
+                let locationsArray = getMockLocationsFor(location: myLocation, itemCount: numberOfFakePosition)
+                
+                for i in 0...(numberOfFakePosition - 1) {
+                    arrayData.removeAll()
+                    
+                    // Generazione e aggiunta session ID finti
+                    arrayData.append(String.random())
+                    
+                    // Aggiunta posizioni finte
+                    arrayData.append(String(locationsArray[i].coordinate.latitude))
+                    arrayData.append(String(locationsArray[i].coordinate.longitude))
+                    
+                    arrayOfArrayData.append(arrayData)
+                    
+                    arrayData.removeAll()
+                }
+                
+                // Mischia l'array di array
+                arrayOfArrayData.shuffle()
+                
+                print(arrayOfArrayData)
+                
+                // Invia tutti i dati al server
+                var count : Int = 0
+                
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                    if(count <= 10){
+                        self.communicatePosition(positionIdtoSend: arrayOfArrayData[count][0], latitudeToSend: arrayOfArrayData[count][1], longitudeToSend: arrayOfArrayData[count][2])
+                        count += 1
+                    } else{
+                        timer.invalidate()
+                    }
+                }
+                
+                /*
+                for i in 0...(numberOfFakePosition) {
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                       self.communicatePosition(positionIdtoSend: arrayOfArrayData[i][0], latitudeToSend: arrayOfArrayData[i][1], longitudeToSend: arrayOfArrayData[i][2])
+                    }
+                    
+                    //Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) {_ in}
+                }
+                */
+                
+                arrayOfArrayData.removeAll()
+                
+                /*
+                // Generazione del position ID random
+                positionId = String.random()
+                
+                var positionIdArray = [String]()
+                positionIdArray.append(positionId!)
+                
+                for _ in 1...10 {
+                    let randomString = String.random()
+                    positionIdArray.append(randomString)
+                }
+                
+                let myLocation = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
+                
+                let locationsArray = getMockLocationsFor(location: myLocation, itemCount: 10)
+                
+                print(locationsArray)
+                for (index, _) in locationsArray.enumerated() {
+                    print(locationsArray[index].coordinate.latitude)
+                    print(locationsArray[index].coordinate.longitude)
+                }
+                */
+                
                 timeInterval = self.activityTimer!
                 timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
                 print("LONTANO: \(timeInterval)")
@@ -243,7 +334,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     }
     
     // Registra la nuova posizione nel database comunicando con il backend
-    func communicatePosition(){
+    func communicatePosition(positionIdtoSend: String, latitudeToSend: String, longitudeToSend: String){
         var session = URLSession.shared
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
@@ -257,7 +348,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitude, longitude]], "properties": ["action": "communicate-position", "session_id": sessionId, "activity": activity]]
+        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitudeToSend, longitudeToSend]], "properties": ["action": "communicate-position", "session_id": sessionId, "position_id_device": positionIdtoSend, "activity": activity]]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -381,4 +472,46 @@ extension WKWebView {
             load(request)
         }
     }
+}
+
+// Genarazione stringa alfanumerica random
+extension String {
+    static func random(length: Int = 20) -> String {
+        let base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        var randomString: String = ""
+
+        for _ in 0..<length {
+            let randomValue = arc4random_uniform(UInt32(base.count))
+            randomString += "\(base[base.index(base.startIndex, offsetBy: Int(randomValue))])"
+        }
+        return randomString
+    }
+}
+
+// Crea posizioni random vicine alla reale posizione dell'utente
+func getMockLocationsFor(location: CLLocation, itemCount: Int) -> [CLLocation] {
+    
+    func getBase(number: Double) -> Double {
+        return round(number * 1000)/1000
+    }
+    
+    func randomCoordinate() -> Double {
+        return Double(arc4random_uniform(140)) * 0.0001
+    }
+    
+    let baseLatitude = getBase(number: location.coordinate.latitude - 0.007)
+    // longitude is a little higher since I am not on equator, you can adjust or make dynamic
+    let baseLongitude = getBase(number: location.coordinate.longitude - 0.008)
+    
+    var items = [CLLocation]()
+    for _ in 0..<itemCount {
+        
+        let randomLat = baseLatitude + randomCoordinate()
+        let randomLong = baseLongitude + randomCoordinate()
+        let location = CLLocation(latitude: randomLat, longitude: randomLong)
+        
+        items.append(location)
+    }
+    
+    return items
 }
