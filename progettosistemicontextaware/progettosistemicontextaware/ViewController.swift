@@ -120,9 +120,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     
     @objc func onTimer(timer: Timer) {
         print("TIMER 2: \(self.timeInterval)")
+        print("Contenuto realPositionId: \(self.delegate.realPositionIdAppDelegate)")
         
         // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
         if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
+            let activityToSend = self.activity!
+            
             self.determineMyCurrentLocation()
             
             let coordinatePrevious = CLLocation(latitude: (self.latitudePrevious! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
@@ -147,10 +150,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 self.toSend = false
             }
             
-            if(self.toSend) {
-                // Genero il position ID corretto, in un array di array inserisco position ID, latitudine e longitudine corretti e finti, mischio random l'array. Con un for invoco n volte communicatePosition() passandogli ogni volta una tripletta diversa, solo una sarà quella giusta. In AppDelegate recupero il position ID corretto.
-                
-                let numberOfFakePosition: Int = 10
+            if(self.toSend) {                
+                let numberOfFakePosition: Int = 9
                 var arrayOfArrayData = [[String]]()
                 var arrayData = [String]()
                 
@@ -161,7 +162,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 print("latitude: \(latitude!)")
                 print("longitude: \(longitude!)")
                 
-                // Aggiunta session ID e posizioni vere
+                // Aggiunta position ID vero all'array dei position ID veri
+                self.delegate.realPositionIdAppDelegate.append(positionId!)
+                
+                // Aggiunta position ID e posizioni vere
                 arrayData.append(positionId!)
                 arrayData.append(latitude!)
                 arrayData.append(longitude!)
@@ -195,54 +199,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 // Invia tutti i dati al server
                 var count : Int = 0
                 
-                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-                    if(count <= 10){
-                        self.communicatePosition(positionIdtoSend: arrayOfArrayData[count][0], latitudeToSend: arrayOfArrayData[count][1], longitudeToSend: arrayOfArrayData[count][2])
+                Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer2 in
+                    if(count <= numberOfFakePosition){
+                        
+                        //print(count)
+                        //print(arrayOfArrayData[count][0])
+                        //print(arrayOfArrayData[count][1])
+                        //print(arrayOfArrayData[count][2])
+                        //print("\n")
+                        
+                        self.communicatePosition(positionIdtoSend: arrayOfArrayData[count][0], latitudeToSend: arrayOfArrayData[count][1], longitudeToSend: arrayOfArrayData[count][2], activityToSend: activityToSend)
                         count += 1
                     } else{
-                        timer.invalidate()
+                        timer2.invalidate()
+                        arrayOfArrayData.removeAll()
+                        
+                        self.timeInterval = self.activityTimer!
+                        timer.fireDate = timer.fireDate.addingTimeInterval(self.timeInterval)
+                        print("LONTANO: \(self.timeInterval)")
                     }
                 }
-                
-                /*
-                for i in 0...(numberOfFakePosition) {
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                       self.communicatePosition(positionIdtoSend: arrayOfArrayData[i][0], latitudeToSend: arrayOfArrayData[i][1], longitudeToSend: arrayOfArrayData[i][2])
-                    }
-                    
-                    //Timer.scheduledTimer(withTimeInterval: 0.4, repeats: false) {_ in}
-                }
-                */
-                
-                arrayOfArrayData.removeAll()
-                
-                /*
-                // Generazione del position ID random
-                positionId = String.random()
-                
-                var positionIdArray = [String]()
-                positionIdArray.append(positionId!)
-                
-                for _ in 1...10 {
-                    let randomString = String.random()
-                    positionIdArray.append(randomString)
-                }
-                
-                let myLocation = CLLocation(latitude: (self.latitude! as NSString).doubleValue, longitude: (self.longitudePrevious! as NSString).doubleValue)
-                
-                let locationsArray = getMockLocationsFor(location: myLocation, itemCount: 10)
-                
-                print(locationsArray)
-                for (index, _) in locationsArray.enumerated() {
-                    print(locationsArray[index].coordinate.latitude)
-                    print(locationsArray[index].coordinate.longitude)
-                }
-                */
-                
-                timeInterval = self.activityTimer!
-                timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
-                print("LONTANO: \(timeInterval)")
             } else {
                 switch self.activity! {
                 case "walk":
@@ -334,7 +310,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     }
     
     // Registra la nuova posizione nel database comunicando con il backend
-    func communicatePosition(positionIdtoSend: String, latitudeToSend: String, longitudeToSend: String){
+    func communicatePosition(positionIdtoSend: String, latitudeToSend: String, longitudeToSend: String, activityToSend: String){
         var session = URLSession.shared
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
@@ -348,7 +324,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitudeToSend, longitudeToSend]], "properties": ["action": "communicate-position", "session_id": sessionId, "position_id_device": positionIdtoSend, "activity": activity]]
+        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitudeToSend, longitudeToSend]], "properties": ["action": "communicate-position", "session_id": sessionId, "position_id_device": positionIdtoSend, "activity": activityToSend]]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -462,6 +438,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             }
         }
     }
+    
+    // Crea posizioni random vicine alla reale posizione dell'utente
+    func getMockLocationsFor(location: CLLocation, itemCount: Int) -> [CLLocation] {
+        
+        func getBase(number: Double) -> Double {
+            return round(number * 1000)/1000
+        }
+        
+        func randomCoordinate() -> Double {
+            return Double(arc4random_uniform(140)) * 0.0001
+        }
+        
+        let baseLatitude = getBase(number: location.coordinate.latitude - 0.007)
+        // longitude is a little higher since I am not on equator, you can adjust or make dynamic
+        let baseLongitude = getBase(number: location.coordinate.longitude - 0.008)
+        
+        var items = [CLLocation]()
+        for _ in 0..<itemCount {
+            
+            let randomLat = baseLatitude + randomCoordinate()
+            let randomLong = baseLongitude + randomCoordinate()
+            let location = CLLocation(latitude: randomLat, longitude: randomLong)
+            
+            items.append(location)
+        }
+        
+        return items
+    }
 }
 
 // Gestione caricamento pagine WebView
@@ -486,32 +490,4 @@ extension String {
         }
         return randomString
     }
-}
-
-// Crea posizioni random vicine alla reale posizione dell'utente
-func getMockLocationsFor(location: CLLocation, itemCount: Int) -> [CLLocation] {
-    
-    func getBase(number: Double) -> Double {
-        return round(number * 1000)/1000
-    }
-    
-    func randomCoordinate() -> Double {
-        return Double(arc4random_uniform(140)) * 0.0001
-    }
-    
-    let baseLatitude = getBase(number: location.coordinate.latitude - 0.007)
-    // longitude is a little higher since I am not on equator, you can adjust or make dynamic
-    let baseLongitude = getBase(number: location.coordinate.longitude - 0.008)
-    
-    var items = [CLLocation]()
-    for _ in 0..<itemCount {
-        
-        let randomLat = baseLatitude + randomCoordinate()
-        let randomLong = baseLongitude + randomCoordinate()
-        let location = CLLocation(latitude: randomLat, longitude: randomLong)
-        
-        items.append(location)
-    }
-    
-    return items
 }

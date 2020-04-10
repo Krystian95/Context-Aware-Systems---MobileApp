@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     let gcmMessageIDKey = "gcm.message_id"
     var tokenAppDelegate : String? = ""
     var contentAppDelegate : String? = ""
+    var realPositionIdAppDelegate = [String]()
     
     //didReceive response: UNNotificationResponse,
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -28,19 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         Messaging.messaging().delegate = self
         
-        /*
-        let data = response.notification.request.content.userInfo as! [String: AnyObject]
-        let aps = data["aps"]
-        let alert = aps?["alert"]! as! NSDictionary
-        let body = alert["body"] as! String
-        let custom_data = alert["custom_data"] as! NSDictionary
-        let position_id_device = custom_data["position_id_device"] as! String
-        
-        print("position_id_device: \(position_id_device)")
-        */
-        
         if #available(iOS 10.0, *) {
-          //if(position_id_device == "1234567890"){
               // For iOS 10 display notification (sent via APNS)
               UNUserNotificationCenter.current().delegate = self
               print("WELAAA5")
@@ -48,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
               UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
                 completionHandler: {_, _ in })
-         // }
         } else {
           let settings: UIUserNotificationSettings =
           UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
@@ -73,8 +61,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let position_id_device = alert["position_id_device"] as! String
         
         print("position_id_device: \(position_id_device)")
+        print("realPositionId: \(realPositionIdAppDelegate)")
         
-        if(position_id_device == "1234567890"){
+        if(realPositionIdAppDelegate.contains(position_id_device)){
             completionHandler([.alert, .badge, .sound])
         } else {
             completionHandler([])
