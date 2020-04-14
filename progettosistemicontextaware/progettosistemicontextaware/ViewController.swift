@@ -35,6 +35,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     var toSend: Bool = true
     var timeInterval: Double = 5
     var positionId: String? = ""
+    var positionIdGroup: String? = ""
     
     // Elementi UI
     @IBOutlet weak var labelLatitude: UILabel!
@@ -155,10 +156,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 var arrayOfArrayData = [[String]]()
                 var arrayData = [String]()
                 
-                // Generazione session ID vero
+                // Generazione position ID vero
                 positionId = String.random()
                 
+                // Generazione position ID Group
+                positionIdGroup = String.random()
+                
                 print("positionId: \(positionId!)")
+                print("positionIdGroup: \(positionIdGroup!)")
                 print("latitude: \(latitude!)")
                 print("longitude: \(longitude!)")
                 
@@ -202,13 +207,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer2 in
                     if(count <= numberOfFakePosition){
                         
-                        //print(count)
-                        //print(arrayOfArrayData[count][0])
-                        //print(arrayOfArrayData[count][1])
-                        //print(arrayOfArrayData[count][2])
-                        //print("\n")
-                        
-                        self.communicatePosition(positionIdtoSend: arrayOfArrayData[count][0], latitudeToSend: arrayOfArrayData[count][1], longitudeToSend: arrayOfArrayData[count][2], activityToSend: activityToSend)
+                        self.communicatePosition(positionIdToSend: arrayOfArrayData[count][0], positionIdGroupToSend: self.positionIdGroup!, latitudeToSend: arrayOfArrayData[count][1], longitudeToSend: arrayOfArrayData[count][2], activityToSend: activityToSend)
                         count += 1
                     } else{
                         timer2.invalidate()
@@ -266,7 +265,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let parameters = ["action": "register", "registration_token": token]
+        let parameters = [
+            "action": "register",
+            "registration_token": token
+        ]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -312,7 +314,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
     }
     
     // Registra la nuova posizione nel database comunicando con il backend
-    func communicatePosition(positionIdtoSend: String, latitudeToSend: String, longitudeToSend: String, activityToSend: String){
+    func communicatePosition(positionIdToSend: String, positionIdGroupToSend: String, latitudeToSend: String, longitudeToSend: String, activityToSend: String){
         var session = URLSession.shared
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
@@ -325,8 +327,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
+        /*
+        // MODIFICA LATITUDINE E LONGITUDINE E RIMETTI 50 METRI ANZICHÈ 1
+        
         let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitudeToSend, longitudeToSend]], "properties": ["action": "communicate-position", "session_id": sessionId, "position_id_device": positionIdtoSend, "activity": activityToSend]]
+        */
+        
+        let parameters: [String: Any] = [
+            "type": "Feature",
+            "geometry":
+            [
+                    "type": "Point",
+                    "coordinates":
+                    [
+                            "44.49375817125334",
+                            "11.343252727372759"
+                    ]
+            ], "properties":
+                [
+                    "action": "communicate-position",
+                    "session_id": sessionId,
+                    "position_id_device": positionIdToSend,
+                    "position_id_group": positionIdGroupToSend,
+                    "activity": activityToSend
+                ]
+        ]
 
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
