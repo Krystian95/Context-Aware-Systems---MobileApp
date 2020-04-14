@@ -146,7 +146,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelActivity.text = "Attività: \(self.activity!)"
             
             self.toSend = true
-            if((self.activity == self.activityPrevious) && (distanceMeters < 50)) {
+            if((self.activity == self.activityPrevious) && (distanceMeters < 1)) {
                 self.toSend = false
             }
             
@@ -301,7 +301,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 print("Messaggio: \(message!)")
                 print("Session ID: \(self.sessionId!)")
                 
-                self.scrollResponse.text = "Messaggio: \(message!)"
+                let timestamp = self.generateCurrentTimeStamp()
+                print("Timestamp: \(timestamp)")
+                self.scrollResponse.text = "Messaggio: \(message!) \(timestamp)"
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
             }
@@ -359,12 +361,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 print("Messaggio: \(message!)")
                 print("Session ID: \(self.sessionId!)")
                 
-                self.scrollResponse.text = "Messaggio: \(message!)"
+                let timestamp = self.generateCurrentTimeStamp()
+                print("Timestamp: \(timestamp)")
+                self.scrollResponse.text = "Messaggio: \(message!) \(timestamp)"
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
             }
         })
         task.resume()
+    }
+    
+    func generateCurrentTimeStamp() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss dd/MM/yyyy"
+        return (formatter.string(from: Date()) as NSString) as String
     }
     
     // Gestione recupero della posizione

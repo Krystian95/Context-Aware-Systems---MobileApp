@@ -1,3 +1,1 @@
-- Label e risposta server con timestamp di quando è stata eseguita communicatePosition()
-
 - Relazione: MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/
