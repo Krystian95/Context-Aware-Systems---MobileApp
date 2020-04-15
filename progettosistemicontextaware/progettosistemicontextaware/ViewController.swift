@@ -147,7 +147,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelActivity.text = "Attività: \(self.activity!)"
             
             self.toSend = true
-            if((self.activity == self.activityPrevious) && (distanceMeters < 1)) {
+            if((self.activity == self.activityPrevious) && (distanceMeters < 50)) {
                 self.toSend = false
             }
             
@@ -328,12 +328,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        /*
-        // MODIFICA LATITUDINE E LONGITUDINE E RIMETTI 50 METRI ANZICHÈ 1
-        
-        let parameters: [String: Any] = ["type": "Feature", "geometry": ["type": "Point", "coordinates": [latitudeToSend, longitudeToSend]], "properties": ["action": "communicate-position", "session_id": sessionId, "position_id_device": positionIdtoSend, "activity": activityToSend]]
-        */
-        
         let parameters: [String: Any] = [
             "type": "Feature",
             "geometry":
@@ -341,8 +335,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                     "type": "Point",
                     "coordinates":
                     [
-                            "44.49375817125334",
-                            "11.343252727372759"
+                        latitudeToSend,
+                        longitudeToSend
+                        // Geofence piazza Maggiore
+                        //"44.49375817125334",
+                        //"11.343252727372759"
                     ]
             ], "properties":
                 [
