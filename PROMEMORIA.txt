@@ -1,1 +1,2 @@
-- Relazione: MotionDetection() sempre attivo: https://nshipster.com/cmmotionactivity/
+- Impaginare relazione
+- Fare slide

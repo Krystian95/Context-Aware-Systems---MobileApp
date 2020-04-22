@@ -20,11 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var contentAppDelegate : String? = ""
     var realPositionIdAppDelegate = [String]()
     
-    //didReceive response: UNNotificationResponse,
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        // Use Firebase library to configure APIs
+
         FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
@@ -32,7 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if #available(iOS 10.0, *) {
               // For iOS 10 display notification (sent via APNS)
               UNUserNotificationCenter.current().delegate = self
-              print("WELAAA5")
               let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
               UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
@@ -51,8 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // Visualizzazione della notifica con l'app aperta
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
     {
-        print("WELAAA4")
-        print("Notification data: \(notification.request.content.userInfo)")
+        print("\nContenuto notifica: \(notification.request.content.userInfo)")
         
         let data = notification.request.content.userInfo as! [String: AnyObject]
         let aps = data["aps"]
@@ -60,8 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let body = alert["body"] as! String
         let position_id_device = alert["position_id_device"] as! String
         
-        print("position_id_device: \(position_id_device)")
-        print("realPositionId: \(realPositionIdAppDelegate)")
+        print("Position ID veri: \(realPositionIdAppDelegate)")
         
         if(realPositionIdAppDelegate.contains(position_id_device)){
             completionHandler([.alert, .badge, .sound])
@@ -85,7 +79,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
       // Print full message.
       print(userInfo)
-      print("WELAAA1")
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -104,18 +97,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
       // Print full message.
       print(userInfo)
-      print("WELAAA2")
       completionHandler(UIBackgroundFetchResult.newData)
     }
 
     @available(iOS 10.0, *)
-    // Notification interaction response call back
+    // L'utente preme sulla notifica
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-
-        // Dati della notifica:
-        //print("Notification data: \(response.notification.request.content.userInfo)")
+        //print("Dati della notifica: \(response.notification.request.content.userInfo)")
+        print("\nL'utente ha premuto sulla notifica")
         
         let data = response.notification.request.content.userInfo as! [String: AnyObject]
         let aps = data["aps"]
@@ -126,7 +117,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         //print("Title: \(title)")
         print("Body: \(body)")
         contentAppDelegate = body
-        print("WELAAA3")
     }
 
     // MARK: UISceneSession Lifecycle
@@ -193,7 +183,7 @@ extension AppDelegate : MessagingDelegate {
   // [START refresh_token]
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
     tokenAppDelegate = fcmToken
-    print("\nToken Firebase: \(fcmToken) \n")
+    print("\nRegistration token di Firebase: \(fcmToken)")
     
     let dataDict:[String: String] = ["token": fcmToken]
     NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)

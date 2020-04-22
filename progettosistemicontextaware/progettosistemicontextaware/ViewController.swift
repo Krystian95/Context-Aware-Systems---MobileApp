@@ -113,15 +113,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
             self.labelLongitude.text = "Longitudine: \(self.longitude!)"
             self.labelActivity.text = "Attività: \(self.activity!)"
             
-            print("TIMER 1: \(self.timeInterval)")
+            print("\nTimer iniziale: \(self.timeInterval)")
             
             Timer.scheduledTimer(timeInterval: self.timeInterval, target: self, selector: #selector(self.onTimer), userInfo: nil, repeats: true)
         }
     }
     
     @objc func onTimer(timer: Timer) {
-        print("TIMER 2: \(self.timeInterval)")
-        print("Contenuto realPositionId: \(self.delegate.realPositionIdAppDelegate)")
+        print("\nTimer dinamico: \(self.timeInterval)")
+        print("Position ID veri: \(self.delegate.realPositionIdAppDelegate)")
         
         // Se l'utente è fermo, unknown o il session ID non è stato setato correttamente durante la registrazione dell'utente non lancia communicatePosition()
         if((self.activity != "stationary") && (self.activity != "unknown") && (self.sessionId != "")) {
@@ -162,10 +162,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 // Generazione position ID Group
                 positionIdGroup = String.random()
                 
-                print("positionId: \(positionId!)")
-                print("positionIdGroup: \(positionIdGroup!)")
-                print("latitude: \(latitude!)")
-                print("longitude: \(longitude!)")
+                print("Position ID: \(positionId!)")
+                print("Position ID Group: \(positionIdGroup!)")
+                print("Latitude: \(latitude!)")
+                print("Longitude: \(longitude!)")
                 
                 // Aggiunta position ID vero all'array dei position ID veri
                 self.delegate.realPositionIdAppDelegate.append(positionId!)
@@ -199,7 +199,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 // Mischia l'array di array
                 arrayOfArrayData.shuffle()
                 
-                print(arrayOfArrayData)
+                print("Posizioni generate: \(arrayOfArrayData)")
                 
                 // Invia tutti i dati al server
                 var count : Int = 0
@@ -215,7 +215,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                         
                         self.timeInterval = self.activityTimer!
                         timer.fireDate = timer.fireDate.addingTimeInterval(self.timeInterval)
-                        print("LONTANO: \(self.timeInterval)")
                     }
                 }
             } else {
@@ -223,19 +222,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 case "walk":
                     timeInterval = pow(timeInterval, 1.2)
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
-                    print("VICINO walk: \(timeInterval)")
                 case "bike":
                     timeInterval = pow(timeInterval, 1.1)
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
-                    print("VICINO bike: \(timeInterval)")
                 case "car":
                     timeInterval = pow(timeInterval, 1.05)
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
-                    print("VICINO car: \(timeInterval)")
                 default:
                     timeInterval = pow(timeInterval, 1.2)
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
-                    print("VICINO default: \(timeInterval)")
                 }
             }
         } else {
@@ -259,7 +254,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         session = URLSession(configuration: configuration)
 
         // Modificare IP server se necessario
-        let url = URL(string: "http://10.0.1.5:8000/")!
+        let url = URL(string: "http://10.0.1.3:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -299,12 +294,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 let message = json?["message"] as? String
                 self.sessionId = json?["session_id"] as? String
                 
-                print("\nRisultato: \(result!)")
-                print("Messaggio: \(message!)")
-                print("Session ID: \(self.sessionId!)")
+                print("\nRisposta registerUser():")
+                print("\tRisultato: \(result!)")
+                print("\tMessaggio: \(message!)")
+                print("\tSession ID: \(self.sessionId!)")
                 
                 let timestamp = self.generateCurrentTimeStamp()
-                print("Timestamp: \(timestamp)")
+                print("\tTimestamp: \(timestamp)")
                 self.scrollResponse.text = "Messaggio: \(message!) \(timestamp)"
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
@@ -322,7 +318,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         session = URLSession(configuration: configuration)
 
         // Modificare IP server se necessario
-        let url = URL(string: "http://10.0.1.5:8000/")!
+        let url = URL(string: "http://10.0.1.3:8000/")!
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -335,11 +331,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                     "type": "Point",
                     "coordinates":
                     [
-                        latitudeToSend,
-                        longitudeToSend
+                        //latitudeToSend,
+                        //longitudeToSend
                         // Geofence piazza Maggiore
-                        //"44.49375817125334",
-                        //"11.343252727372759"
+                        "44.49375817125334",
+                        "11.343252727372759"
                     ]
             ], "properties":
                 [
@@ -380,12 +376,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 let message = json?["message"] as? String
                 self.sessionId = json?["session_id"] as? String
                 
-                print("\nRisultato: \(result!)")
-                print("Messaggio: \(message!)")
-                print("Session ID: \(self.sessionId!)")
+                print("\nRisposta communicatePosition():")
+                print("\tRisultato: \(result!)")
+                print("\tMessaggio: \(message!)")
+                print("\tSession ID: \(self.sessionId!)")
                 
                 let timestamp = self.generateCurrentTimeStamp()
-                print("Timestamp: \(timestamp)")
+                print("\tTimestamp: \(timestamp)")
                 self.scrollResponse.text = "Messaggio: \(message!) \(timestamp)"
             } catch {
                 print("\n JSON error: \(error.localizedDescription)")
@@ -394,6 +391,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         task.resume()
     }
     
+    // Gestione del formato del timestamp
     func generateCurrentTimeStamp() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss dd/MM/yyyy"
@@ -421,8 +419,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
         longitude = String(userLocation.coordinate.longitude)
         
         // Test output
-        print("\nLatitudine: \(userLocation.coordinate.latitude)")
-        print("Longitudine: \(userLocation.coordinate.longitude)")
+        print("\nLatitudine campionata: \(userLocation.coordinate.latitude)")
+        print("Longitudine campionata: \(userLocation.coordinate.longitude)")
         
         // Interrompi aggiornamento posizione, verrà rilanciato solo ad ogni ciclo del timer
         manager.stopUpdatingLocation()
@@ -446,27 +444,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 if motionActivity.stationary {
                     self?.activity = "stationary"
                     self?.activityTimer = 5
-                    print("L'utente è fermo")
+                    print("\nMovilmento rilevato: utente fermo")
                 } else if motionActivity.walking {
                     self?.activity = "walk"
                     self?.activityTimer = 5
-                    print("L'utente cammina")
+                    print("\nMovilmento rilevato: utente cammina")
                 } else if motionActivity.running {
                     self?.activity = "walk"
                     self?.activityTimer = 5
-                    print("L'utente corre")
+                    print("\nMovilmento rilevato: utente corre")
                 } else if motionActivity.automotive {
                     self?.activity = "car"
                     self?.activityTimer = 20
-                    print("L'utente è in auto")
+                    print("\nMovilmento rilevato: utente in auto")
                 } else if motionActivity.cycling {
                     self?.activity = "bike"
                     self?.activityTimer = 10
-                    print("L'utente è in bicicletta")
+                    print("\nMovilmento rilevato: utente in bicicletta")
                 } else {
                     self?.activity = "unknown"
                     self?.activityTimer = 5
-                    print("Movimento sconosciuto")
+                    print("\nMovilmento rilevato: movimento sconosciuto")
                 }
             }
         }
