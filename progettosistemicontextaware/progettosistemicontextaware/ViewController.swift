@@ -221,15 +221,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, WKNavigationD
                 switch self.activity! {
                 case "walk":
                     timeInterval = pow(timeInterval, 1.2)
+                    if(timeInterval > 5*60){
+                        timeInterval = 5
+                    }
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
                 case "bike":
                     timeInterval = pow(timeInterval, 1.1)
+                    if(timeInterval > 5*60){
+                        timeInterval = 10
+                    }
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
                 case "car":
                     timeInterval = pow(timeInterval, 1.05)
+                    if(timeInterval > 5*60){
+                        timeInterval = 20
+                    }
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
                 default:
                     timeInterval = pow(timeInterval, 1.2)
+                    if(timeInterval > 5*60){
+                        timeInterval = 5
+                    }
                     timer.fireDate = timer.fireDate.addingTimeInterval(timeInterval)
                 }
             }
